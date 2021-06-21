@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Welcome to Awtwvo</title>
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+
+    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">-->
+    <link th:rel="stylesheet" th:href="@{/dist/css/bootstrap.min.css}">
+</head>
+<body>
+
+    <!--<header th:insert="fragments/header.html :: header(searchDTO)"></header>-->
+
+    <header class="p-3 bg-dark text-white">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="post" action="/" th:object="${searchDTO}">
+                    <input type="search" class="form-control form-control-dark"
+                           placeholder="Enter Keyword of Video to Search..." aria-label="Search" th:field="*{query}">
+                </form>
+
+                <div class="text-end">
+                    <button type="button" class="btn btn-outline-light me-2">Login</button>
+                    <button type="button" class="btn btn-warning">Sign-up</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="py-5 text-center container">
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <h1 class="fw-normal">Nno na AWTWVO Int'l ooo!</h1>
+                    <p class="lead text-muted">
+                        Alternative Way to Watch Videos Online. Watch videos currently trending in your region - NIGERIA.
+                        Also, search using your keywords!</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="album py-5 bg-light">
+            <div class="container">
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+                    <div class="col" th:each="video : ${videos}">
+                        <div class="card shadow-sm">
+                        <!--<svg class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>-->
+                            <img th:src="${video.snippet.thumbnails.get('high').url}" alt="">
+
+                            <div class="card-body">
+                                <strong><p class="card-text" th:text="${video.snippet.title}"></p></strong>
+                                <br>
+                                <p class="card-text"
+                                   th:text="${video.snippet.description.length() > 500} ?
+                                        ${#strings.substring(video.snippet.description, 0, 500)} :
+                                            ${video.snippet.description.length()}">
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                <!--<a th:href="@{/{videoId} (videoId = ${video.videoId})}">-->
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" th:data-bs-target="'#watchVideoModal' + ${video.videoId}">
+                                            Watch
+                                        </button>
+                                <!--</a>-->
+                                    <small class="text-muted" th:text="${video.snippet.publishedAt.toLocalDate()}"></small>
+                                </div>
+                                <br>
+
+                                <div th:if="${video.statistics != null}">
+                                    <strong><span class="card-text" th:text="${video.statistics.viewCount}"></span></strong> views |
+                                    <strong><span class="card-text" th:text="${video.statistics.likeCount}"></span></strong> likes |
+                                    <strong><span class="card-text" th:text="${video.statistics.dislikeCount}"></span></strong> dislikes
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="modal fade" th:id="'watchVideoModal' + ${video.videoId}" tabindex="-1" aria-labelledby="watchVideoModalXlLabel" style="display: none;" aria-hidden="true" role="dialog">
+                            <div class="modal-dialog modal-xl">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title h4" th:text="${video.snippet.title}"></h5>
+                                        <button id="watchVideoModalButton" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <iframe id="watchVideoModalIFrame" width="100%" height="700" th:src="@{https://www.youtube.com/embed/{videoId}(videoId = ${video.videoId})}" allowfullscreen="">
+                                        </iframe>
+                                    </div>
+                                    <p class="px-3" th:text="${video.snippet.description}"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <footer class="py-5 bg-dark text-white">
+        <div class="container">
+            <p class="float-end mb-1">
+                <a href="#">Back to top</a>
+            </p>
+            <p class="mb-1"><a href="mailto:ayodele.glow@gmail.com">Ayodele Noutouglo</a> &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}"></span></p>
+            <p class="mb-0">Built with love with: <a href="https://getbootstrap.com">Bootstrap</a> | <a href="https://spring.io">Spring Boot</a> | <a href="https://developers.google.com/youtube/v3/getting-started">Youtube Video API</a></p>
+        </div>
+    </footer>
+
+    <script th:src="@{/dist/js/bootstrap.bundle.min.js}"></script>
+    <script>
+        document.querySelector('#watchVideoModalButton').addEventListener('click', function () {
+            document.querySelector('#watchVideoModalIFrame').removeAttribute('src')
+        });
+    </script>
+
+</body>
+</html>
