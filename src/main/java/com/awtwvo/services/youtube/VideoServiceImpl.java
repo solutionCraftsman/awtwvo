@@ -36,7 +36,7 @@ public class VideoServiceImpl implements VideoService {
 
         final String URL_END_POINT = "https://youtube.googleapis.com/youtube/v3/search" +
                 "?part=snippet" +
-                "&maxResults=50" +
+                "&maxResults=30" +
                 "&type=video" +
                 "&q=" + searchDTO.getQuery() +
                 "&key=" + API_KEY;
@@ -59,7 +59,7 @@ public class VideoServiceImpl implements VideoService {
         final String URL_END_POINT = "https://youtube.googleapis.com/youtube/v3/videos" +
                 "?part=snippet,statistics" +
                 "&chart=mostPopular" +
-                "&maxResults=50" +
+                "&maxResults=30" +
                 "&regionCode=" + regionCode +
                 "&key=" + API_KEY;
 
