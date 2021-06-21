@@ -95,9 +95,6 @@
 
                             </div>
 
-                            <h5 th:text="${pageInfo.resultsPerPage} + ' of ' + ${pageInfo.totalResults}"></h5>
-                            <button type="button" class="btn">Next >></button>
-
                         </div>
 
                         <div class="modal fade" th:id="'watchVideoModal' + ${video.videoId}" tabindex="-1" aria-labelledby="watchVideoModalXlLabel" style="display: none;" aria-hidden="true" role="dialog">
@@ -119,6 +116,9 @@
                     </div>
 
                 </div>
+
+                <h5 th:text="${pageInfo.resultsPerPage} + ' of ' + ${pageInfo.totalResults}"></h5>
+                <button type="button" class="btn btn-secondary">Next >></button>
 
             </div>
         </div>
