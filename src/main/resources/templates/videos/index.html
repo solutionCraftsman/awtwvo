@@ -95,7 +95,7 @@
 
                             </div>
 
-                            <h5 th:text="${pageInfo.resultsPerPage} of ${pageInfo.totalResults}"></h5>
+                            <h5 th:text="${pageInfo.resultsPerPage} + ' of ' + ${pageInfo.totalResults}"></h5>
                             <button type="button" class="btn">Next >></button>
 
                         </div>
